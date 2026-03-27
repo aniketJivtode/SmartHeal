@@ -1,5 +1,6 @@
 import { runAgent } from "../agent/agent.js";
-
+import { validatePatch } from "../guardrails/validate.js";
+import { applyPatch } from "../executor/applyPatch.js";
 export function startWatcher() {
   console.log("👀 Daemon started...");
 
@@ -31,6 +32,7 @@ export function startWatcher() {
 
         attempts++;
       }
+      console.log("Agent Completed");
 
       if (!result || result.confidence < 0.6) {
         job.timeline.push({
@@ -46,6 +48,33 @@ export function startWatcher() {
 
       job.timeline.push({
         step: "Fix generated",
+        time: new Date(),
+      });
+      const validation = validatePatch(result.patch);
+      console.log(result.patch);
+
+      if (!validation.valid) {
+        job.timeline.push({
+          step: "Guardrail failed",
+          time: new Date(),
+          reason: validation.reason,
+        });
+
+        job.status = "FAILED";
+        return;
+      }
+
+      job.timeline.push({
+        step: "Guardrail passed",
+        time: new Date(),
+      });
+
+      // 🔧 EXECUTOR
+      const execResult = applyPatch(result.patch);
+      job.execution = execResult;
+
+      job.timeline.push({
+        step: "Patch applied",
         time: new Date(),
       });
 
