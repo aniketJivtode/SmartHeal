@@ -7,11 +7,17 @@ import JobsPage from "./pages/JobsPage";
 import ConfigPage from "./pages/ConfigPage";
 
 import { triggerError } from "./services/api";
-import { fetchJob } from "./features/jobs/jobSlice";
+import { fetchJobs } from "./features/jobs/jobSlice";
+import { useEffect } from "react";
 
 function App() {
   const [page, setPage] = useState("dashboard");
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchJobs());
+  }, []);
+  window.navigateToJobs = () => setPage("jobs");
 
   // 🔥 Trigger flow (backend + redux)
   const handleTrigger = async () => {
@@ -20,7 +26,7 @@ function App() {
 
       // wait for daemon to process
       setTimeout(() => {
-        dispatch(fetchJob());
+        dispatch(fetchJobs());
       }, 3000);
     } catch (err) {
       console.error("Error triggering job:", err);

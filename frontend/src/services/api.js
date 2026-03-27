@@ -5,4 +5,4 @@ const api = axios.create({
 });
 
 export const triggerError = () => api.get("/error/trigger");
-export const getJob = () => api.get("/agent/job");
+export const getJob = () => api.get("/agent/jobs");

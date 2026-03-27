@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { fetchJob } from "../jobs/jobSlice";
+import { fetchJobs } from "../jobs/jobSlice";
 import { triggerError } from "../../services/api";
 
 export default function TriggerButton() {
@@ -10,7 +10,7 @@ export default function TriggerButton() {
 
     // wait for daemon to process
     setTimeout(() => {
-      dispatch(fetchJob());
+      dispatch(fetchJobs());
     }, 3500);
   };
 
