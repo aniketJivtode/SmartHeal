@@ -7,12 +7,17 @@ router.get("/trigger", (req, res) => {
   try {
     getUser(null); // force error
   } catch (err) {
-    global.errorLog = {
-      message: err.message,
-      stack: err.stack,
-      time: new Date(),
+    const jobId = Date.now().toString();
+    global.currentJob = {
+      id: jobId,
+      error: {
+        message: err.message,
+        stack: err.stack,
+        time: new Date(),
+      },
       status: "NEW",
-      id: Date.now(),
+      agentResult: null,
+      timeline: [],
     };
 
     console.log("🔥 Error captured:", err.message);
