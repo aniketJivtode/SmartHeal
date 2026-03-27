@@ -1,25 +1,17 @@
 import express from "express";
 import { getUser } from "../app/app.js";
-
 const router = express.Router();
+import Job from "../models/Job.js";
 
-router.get("/trigger", (req, res) => {
+router.get("/trigger", async (req, res) => {
   try {
     getUser(null); // force error
   } catch (err) {
     const jobId = Date.now().toString();
-    global.currentJob = {
-      id: jobId,
-      error: {
-        message: err.message,
-        stack: err.stack,
-        time: new Date(),
-      },
+    await Job.create({
       status: "NEW",
-      agentResult: null,
-      timeline: [],
-    };
-
+      error: "Cannot read property xyz",
+    });
     console.log("🔥 Error captured:", err.message);
   }
 

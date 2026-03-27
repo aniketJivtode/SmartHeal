@@ -1,7 +1,7 @@
 export async function runAgent(error) {
   console.log("🤖 Agent running...");
 
-  if (error.message.includes("Cannot read")) {
+  if (error?.message?.includes("Cannot read")) {
     return {
       fix: "Add null check before accessing user.name",
       patch: "if (!user) return null;",
