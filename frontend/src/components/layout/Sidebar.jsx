@@ -16,21 +16,23 @@ export default function Sidebar({ setPage, page }) {
   useEffect(() => {
     const stored = localStorage.getItem("connectedRepo");
     if (stored) {
-      try { setRepo(JSON.parse(stored)); } catch { /* ignore */ }
+      try {
+        setRepo(JSON.parse(stored));
+      } catch {
+        /* ignore */
+      }
     }
   }, []);
 
   const items = [
-    { key: "dashboard", label: "Overview",       icon: LayoutDashboard },
-    { key: "jobs",      label: "Issue Explorer", icon: List },
-    { key: "projects",  label: "Projects",       icon: FolderPlus },
-    { key: "analytics", label: "Analytics",      icon: BarChart3 },
-    { key: "config",    label: "Settings",       icon: Settings },
+    { key: "dashboard", label: "Overview", icon: LayoutDashboard },
+    { key: "jobs", label: "Issue Explorer", icon: List },
+    { key: "projects", label: "Projects", icon: FolderPlus },
+    { key: "analytics", label: "Analytics", icon: BarChart3 },
+    { key: "config", label: "Settings", icon: Settings },
   ];
 
-  const bottomItems = [
-    { key: "docs", label: "Help & Docs", icon: HelpCircle },
-  ];
+  const bottomItems = [{ key: "docs", label: "Help & Docs", icon: HelpCircle }];
 
   return (
     <>

@@ -10,10 +10,24 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
-const api = axios.create({ baseURL: "http://localhost:3001", withCredentials: true });
+const api = axios.create({
+  baseURL: "http://localhost:3001",
+  withCredentials: true,
+});
 
 // ─── Channel Card ─────────────────────────────────────────────────────────────
-function ChannelCard({ icon: Icon, title, color, enabled, configured, detail, setupSteps, onTest, testing, testResult }) {
+function ChannelCard({
+  icon: Icon,
+  title,
+  color,
+  enabled,
+  configured,
+  detail,
+  setupSteps,
+  onTest,
+  testing,
+  testResult,
+}) {
   const [showSetup, setShowSetup] = useState(false);
 
   return (
@@ -67,14 +81,18 @@ function ChannelCard({ icon: Icon, title, color, enabled, configured, detail, se
 
       {/* Test result */}
       {testResult && (
-        <div className={`flex items-start gap-2 text-xs rounded-lg px-3 py-2 ${
-          testResult.ok
-            ? "bg-green-50 text-green-700 border border-green-200"
-            : "bg-red-50 text-red-700 border border-red-200"
-        }`}>
-          {testResult.ok
-            ? <CheckCircle2 size={13} className="mt-0.5 shrink-0" />
-            : <AlertCircle size={13} className="mt-0.5 shrink-0" />}
+        <div
+          className={`flex items-start gap-2 text-xs rounded-lg px-3 py-2 ${
+            testResult.ok
+              ? "bg-green-50 text-green-700 border border-green-200"
+              : "bg-red-50 text-red-700 border border-red-200"
+          }`}
+        >
+          {testResult.ok ? (
+            <CheckCircle2 size={13} className="mt-0.5 shrink-0" />
+          ) : (
+            <AlertCircle size={13} className="mt-0.5 shrink-0" />
+          )}
           <span>{testResult.message}</span>
         </div>
       )}
@@ -82,10 +100,14 @@ function ChannelCard({ icon: Icon, title, color, enabled, configured, detail, se
       {/* Setup guide */}
       {showSetup && (
         <div className="bg-gray-50 border rounded-xl p-4 space-y-2">
-          <p className="text-xs font-semibold text-gray-600 mb-1">Setup steps</p>
+          <p className="text-xs font-semibold text-gray-600 mb-1">
+            Setup steps
+          </p>
           {setupSteps.map((step, i) => (
             <div key={i} className="flex gap-2 text-xs text-gray-600">
-              <span className="shrink-0 font-mono text-indigo-500">{i + 1}.</span>
+              <span className="shrink-0 font-mono text-indigo-500">
+                {i + 1}.
+              </span>
               <span dangerouslySetInnerHTML={{ __html: step }} />
             </div>
           ))}
@@ -102,7 +124,8 @@ export default function ConfigPage() {
   const [results, setResults] = useState({ email: null, slack: null });
 
   useEffect(() => {
-    api.get("/api/alerts/config")
+    api
+      .get("/api/alerts/config")
       .then((r) => setConfig(r.data))
       .catch(() => setConfig(null));
   }, []);
@@ -112,7 +135,10 @@ export default function ConfigPage() {
     setResults((r) => ({ ...r, [channel]: null }));
     try {
       const res = await api.post("/api/alerts/test", { channel });
-      setResults((r) => ({ ...r, [channel]: { ok: true, message: res.data.message } }));
+      setResults((r) => ({
+        ...r,
+        [channel]: { ok: true, message: res.data.message },
+      }));
     } catch (err) {
       setResults((r) => ({
         ...r,
@@ -135,7 +161,8 @@ export default function ConfigPage() {
           Alert Settings
         </h1>
         <p className="text-sm text-gray-400 mt-0.5">
-          Configure where SmartHeal sends notifications when jobs complete, fail, or need approval.
+          Configure where SmartHeal sends notifications when jobs complete,
+          fail, or need approval.
         </p>
       </div>
 
@@ -145,7 +172,8 @@ export default function ConfigPage() {
         <p>
           Alerts fire automatically from{" "}
           <code className="bg-indigo-100 px-1 rounded">watcher.js</code> on
-          every job event — auto-fix ✅, needs approval ⚠️, failure ❌, crash 💥.
+          every job event — auto-fix ✅, needs approval ⚠️, failure ❌, crash
+          💥.
         </p>
         <p>
           Enable channels by editing{" "}
@@ -157,13 +185,33 @@ export default function ConfigPage() {
       {/* .env snippet */}
       <div className="bg-gray-900 rounded-xl p-4 text-xs font-mono text-gray-200 space-y-0.5 overflow-x-auto">
         <p className="text-gray-500 mb-2"># backend/.env</p>
-        <p><span className="text-indigo-400">ALERT_EMAIL</span>=<span className="text-green-400">true</span></p>
-        <p><span className="text-indigo-400">GMAIL_USER</span>=<span className="text-yellow-300">you@gmail.com</span></p>
-        <p><span className="text-indigo-400">GMAIL_APP_PASSWORD</span>=<span className="text-yellow-300">xxxx-xxxx-xxxx-xxxx</span></p>
-        <p><span className="text-indigo-400">ALERT_EMAIL_TO</span>=<span className="text-yellow-300">team@yourco.com</span></p>
+        <p>
+          <span className="text-indigo-400">ALERT_EMAIL</span>=
+          <span className="text-green-400">true</span>
+        </p>
+        <p>
+          <span className="text-indigo-400">GMAIL_USER</span>=
+          <span className="text-yellow-300">you@gmail.com</span>
+        </p>
+        <p>
+          <span className="text-indigo-400">GMAIL_APP_PASSWORD</span>=
+          <span className="text-yellow-300">xxxx-xxxx-xxxx-xxxx</span>
+        </p>
+        <p>
+          <span className="text-indigo-400">ALERT_EMAIL_TO</span>=
+          <span className="text-yellow-300">team@yourco.com</span>
+        </p>
         <p className="mt-2 text-gray-500"># Slack</p>
-        <p><span className="text-indigo-400">ALERT_SLACK</span>=<span className="text-green-400">true</span></p>
-        <p><span className="text-indigo-400">SLACK_WEBHOOK_URL</span>=<span className="text-yellow-300">https://hooks.slack.com/services/…</span></p>
+        <p>
+          <span className="text-indigo-400">ALERT_SLACK</span>=
+          <span className="text-green-400">true</span>
+        </p>
+        <p>
+          <span className="text-indigo-400">SLACK_WEBHOOK_URL</span>=
+          <span className="text-yellow-300">
+            https://hooks.slack.com/services/…
+          </span>
+        </p>
       </div>
 
       {/* Channel cards */}
@@ -173,7 +221,11 @@ export default function ConfigPage() {
         color="bg-blue-500"
         enabled={config?.email?.enabled}
         configured={config?.email?.configured}
-        detail={config?.email?.to ? `Sending to: ${config.email.to}` : "Nodemailer + Gmail App Password · free forever"}
+        detail={
+          config?.email?.to
+            ? `Sending to: ${config.email.to}`
+            : "Nodemailer + Gmail App Password · free forever"
+        }
         onTest={() => sendTest("email")}
         testing={testing.email}
         testResult={results.email}

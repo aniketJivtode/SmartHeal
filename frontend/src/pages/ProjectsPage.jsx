@@ -460,7 +460,9 @@ function ProjectCard({ project, isActive, onSelect, onDelete, onConnect }) {
         <div className="flex items-center justify-between gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
           <div className="flex items-center gap-1.5 text-xs text-green-700 min-w-0">
             <CheckCircle2 size={13} className="shrink-0 text-green-600" />
-            <span className="truncate font-medium">{connectedRepo.fullName}</span>
+            <span className="truncate font-medium">
+              {connectedRepo.fullName}
+            </span>
           </div>
           <button
             onClick={() => onConnect(project)}

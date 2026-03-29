@@ -58,10 +58,10 @@ function App() {
       {/* 📄 Main Content */}
       <div className="flex-1 overflow-y-auto p-6">
         {page === "dashboard" && <DashboardPage onTrigger={handleTrigger} />}
-        {page === "jobs"      && <JobsPage />}
-        {page === "projects"  && <ProjectsPage />}
-        {page === "config"    && <ConfigPage />}
-        {page === "docs"      && <DocsPage />}
+        {page === "jobs" && <JobsPage />}
+        {page === "projects" && <ProjectsPage />}
+        {page === "config" && <ConfigPage />}
+        {page === "docs" && <DocsPage />}
       </div>
     </div>
   );

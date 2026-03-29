@@ -73,8 +73,12 @@ function buildEmailHtml(message, job) {
         <td style="padding:6px 0;font-size:13px">${job.agentResult?.confidence?.toFixed(2) ?? "—"}</td></tr>
     <tr><td style="color:#6b7280;padding:6px 0;font-size:13px">Fix</td>
         <td style="padding:6px 0;font-size:13px">${job.agentResult?.fix || "—"}</td></tr>
-    ${job.prUrl ? `<tr><td style="color:#6b7280;padding:6px 0;font-size:13px">PR</td>
-        <td style="padding:6px 0;font-size:13px"><a href="${job.prUrl}" style="color:#4f46e5">${job.prUrl}</a></td></tr>` : ""}
+    ${
+      job.prUrl
+        ? `<tr><td style="color:#6b7280;padding:6px 0;font-size:13px">PR</td>
+        <td style="padding:6px 0;font-size:13px"><a href="${job.prUrl}" style="color:#4f46e5">${job.prUrl}</a></td></tr>`
+        : ""
+    }
   `
     : "";
 
