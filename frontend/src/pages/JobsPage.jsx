@@ -10,6 +10,8 @@ import {
   Wrench,
   AlertTriangle,
   Activity,
+  GitPullRequest,
+  ExternalLink,
 } from "lucide-react";
 import Skeleton from "../components/layout/Skeleton";
 
@@ -59,7 +61,7 @@ export default function JobsPage() {
         </h2>
 
         <div className="text-sm text-gray-500">
-          {loading ? <Skeleton/> : `${jobs.length} runs`}
+          {loading ? <Skeleton /> : `${jobs.length} runs`}
         </div>
       </div>
 
@@ -219,6 +221,41 @@ export default function JobsPage() {
         <div className="flex-1 bg-gray-50 overflow-y-auto p-6">
           {selected ? (
             <div className="max-w-2xl mx-auto space-y-6">
+              {/* PR BANNER — shown when a PR was created */}
+              {(selected.prUrl ||
+                selected.timeline?.find((t) => t.step === "PR created")
+                  ?.reason) && (
+                <a
+                  href={
+                    selected.prUrl ||
+                    selected.timeline.find((t) => t.step === "PR created")
+                      .reason
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-5 py-3 hover:bg-green-100 transition group"
+                >
+                  <GitPullRequest
+                    size={18}
+                    className="text-green-600 shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-green-800">
+                      Pull Request Created
+                    </p>
+                    <p className="text-xs text-green-600 truncate">
+                      {selected.prUrl ||
+                        selected.timeline.find((t) => t.step === "PR created")
+                          .reason}
+                    </p>
+                  </div>
+                  <ExternalLink
+                    size={14}
+                    className="text-green-500 shrink-0 group-hover:text-green-700"
+                  />
+                </a>
+              )}
+
               {/* ISSUE */}
               <div className="bg-white p-5 rounded-xl shadow-sm">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
@@ -265,12 +302,13 @@ export default function JobsPage() {
                   <Activity size={14} />
                   Execution Timeline
                 </h4>
-
                 <div className="border-l pl-4 space-y-3">
                   {selected.timeline?.map((t, i) => {
                     const isFail =
                       t.step.toLowerCase().includes("fail") ||
                       t.step.toLowerCase().includes("reject");
+
+                    const isPR = t.step === "PR created";
 
                     return (
                       <div key={i} className="relative">
@@ -280,7 +318,21 @@ export default function JobsPage() {
                           }`}
                         ></span>
 
-                        <p className="text-sm">{t.step}</p>
+                        <p className="text-sm flex items-center gap-2">
+                          {t.step}
+
+                          {/* 🔥 PR LINK */}
+                          {isPR && (
+                            <a
+                              href={t.reason}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-600 underline text-xs"
+                            >
+                              View PR
+                            </a>
+                          )}
+                        </p>
                         <p className="text-xs text-gray-400">
                           {new Date(t.time).toLocaleTimeString()}
                         </p>
