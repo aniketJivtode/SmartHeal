@@ -20,7 +20,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   }),
 );
@@ -50,12 +50,12 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   SmartHeal.init({
-    endpoint: "http://localhost:5000/jobs",
-    projectId: "test-app",
+    endpoint: `${process.env.BACKEND_URL || "http://localhost:3001"}/jobs`,
+    projectId: process.env.SMARTHEAL_PROJECT_ID || "default",
   });
   console.log(`Server running on port ${PORT}`);
 });

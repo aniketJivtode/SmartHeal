@@ -26,7 +26,7 @@ function App() {
   // Init SmartHeal SDK with the real projectId — this intercepts console.error
   // and forwards errors to the backend automatically
   SmartHeal.init({
-    endpoint: "http://localhost:3001/jobs",
+    endpoint: `${import.meta.env.VITE_API_URL || "http://localhost:3001"}/jobs`,
     projectId: activeProjectId,
   });
 

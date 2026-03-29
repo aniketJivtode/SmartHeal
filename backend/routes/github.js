@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/auth", (req, res) => {
   const clientId = process.env.GITHUB_CLIENT_ID;
 
-  const redirectUri = "http://localhost:3001/api/github/callback";
+  const redirectUri = `${process.env.BACKEND_URL || "http://localhost:3001"}/api/github/callback`;
 
   const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=repo`;
 
@@ -42,7 +42,9 @@ router.get("/callback", async (req, res) => {
     req.session.githubToken = access_token;
 
     // ✅ Redirect back to frontend root; frontend wizard detects ?step=select
-    res.redirect("http://localhost:5173/?step=select");
+    res.redirect(
+      `${process.env.FRONTEND_URL || "http://localhost:5173"}/?step=select`,
+    );
   } catch (err) {
     console.error("OAuth ERROR:", err.response?.data || err.message); // 🔥 IMPORTANT
     res.status(500).send("OAuth failed");

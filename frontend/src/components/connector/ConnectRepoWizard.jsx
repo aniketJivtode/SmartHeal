@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 export default function ConnectRepoWizard({ onClose, onSuccess }) {
   const [step, setStep] = useState("form");
   const [projectId, setProjectId] = useState("");
@@ -22,7 +24,7 @@ export default function ConnectRepoWizard({ onClose, onSuccess }) {
   const fetchRepos = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3001/api/github/repos", {
+      const res = await axios.get(`${API}/api/github/repos`, {
         withCredentials: true, // 🔥 IMPORTANT
       });
 
@@ -58,18 +60,15 @@ export default function ConnectRepoWizard({ onClose, onSuccess }) {
       // No repos returned but request succeeded — still go to select so user can pick when available
       setStep("select");
     } catch (err) {
-      // If backend indicates not authenticated (401) or similar, initiate OAuth flow
       if (err?.response?.status === 401 || err?.response?.status === 403) {
-        window.location.href = "http://localhost:3001/api/github/auth";
+        window.location.href = `${API}/api/github/auth`;
         return;
       }
-
-      // For other errors, fall back to redirecting to OAuth to ensure the flow continues
       console.error(
         "Fetch repos failed, redirecting to OAuth as fallback.",
         err?.response || err?.message || err,
       );
-      window.location.href = "http://localhost:3001/api/github/auth";
+      window.location.href = `${API}/api/github/auth`;
     } finally {
       setLoading(false);
     }
@@ -81,7 +80,7 @@ export default function ConnectRepoWizard({ onClose, onSuccess }) {
       const config = JSON.parse(localStorage.getItem("repoConfig"));
 
       const res = await axios.post(
-        "http://localhost:3001/api/github/select-repo",
+        `${API}/api/github/select-repo`,
         {
           name: selectedRepo.name,
           fullName: selectedRepo.full_name,

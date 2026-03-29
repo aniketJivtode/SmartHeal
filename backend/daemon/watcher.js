@@ -16,6 +16,11 @@ function emitJobUpdate(job) {
 export function startWatcher() {
   console.log("👀 Daemon started...");
 
+  const INTERVAL = parseInt(process.env.WATCHER_INTERVAL_MS || "2000");
+  const C_RETRY = parseFloat(process.env.CONFIDENCE_RETRY || "0.6");
+  const C_REJECT = parseFloat(process.env.CONFIDENCE_REJECT || "0.5");
+  const C_MANUAL = parseFloat(process.env.CONFIDENCE_MANUAL || "0.85");
+
   setInterval(async () => {
     let job;
 
@@ -53,7 +58,7 @@ export function startWatcher() {
       for (let attempt = 0; attempt < 2; attempt++) {
         attempts++;
         result = await runAgent(job.error);
-        if (result?.confidence > 0.6) break;
+        if (result?.confidence > C_RETRY) break;
       }
       console.log("result", result);
       await updateJob({
@@ -66,7 +71,7 @@ export function startWatcher() {
       });
 
       // ❌ rejected (very low confidence)
-      if (!result || result.confidence < 0.5) {
+      if (!result || result.confidence < C_REJECT) {
         await updateJob({
           status: "FAILED",
           agentResult: result,
@@ -84,7 +89,7 @@ export function startWatcher() {
       }
 
       // ⚠️ manual review
-      if (result.confidence < 0.85) {
+      if (result.confidence < C_MANUAL) {
         await updateJob({
           status: "AWAITING_APPROVAL",
           agentResult: result,
@@ -234,5 +239,5 @@ export function startWatcher() {
         await sendAlert(`💥 Agent crashed: ${job.error}`, job);
       }
     }
-  }, 2000);
+  }, INTERVAL);
 }

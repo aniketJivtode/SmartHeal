@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import axios from "axios";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 // ─── helpers ────────────────────────────────────────────────────────────────
 function Badge({ children, color = "gray" }) {
   const colors = {
@@ -165,7 +167,7 @@ function ConnectRepoPanel({ project, onConnected, autoLoad = false }) {
     setLoadingRepos(true);
     setError(null);
     try {
-      const res = await axios.get("http://localhost:3001/api/github/repos", {
+      const res = await axios.get(`${API}/api/github/repos`, {
         withCredentials: true,
       });
       setRepos(res.data || []);
@@ -184,7 +186,7 @@ function ConnectRepoPanel({ project, onConnected, autoLoad = false }) {
   const handleAuth = () => {
     // Store selected project so we can restore it after OAuth redirect
     localStorage.setItem("pendingProjectId", project.projectId);
-    window.location.href = "http://localhost:3001/api/github/auth";
+    window.location.href = `${API}/api/github/auth`;
   };
 
   const handleSave = async () => {
@@ -193,7 +195,7 @@ function ConnectRepoPanel({ project, onConnected, autoLoad = false }) {
     setError(null);
     try {
       const res = await axios.post(
-        "http://localhost:3001/api/github/select-repo",
+        `${API}/api/github/select-repo`,
         {
           name: selected.name,
           fullName: selected.full_name,
@@ -321,7 +323,7 @@ function SdkSnippet({ project, repo }) {
 import SmartHeal from "smartheal";
 
 SmartHeal.init({
-  endpoint: "http://localhost:3001/jobs",
+  endpoint: "${API}/jobs",
   projectId: "${project.projectId}",
 });`;
 
