@@ -1,0 +1,9 @@
+# SmartHeal Auto Fix
+
+
+let data;
+try {
+  data = JSON.parse(input);
+} catch (e) {
+  console.error("Invalid JSON");
+}
