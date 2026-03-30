@@ -1,0 +1,7 @@
+# SmartHeal Auto Fix
+
+--- a/backend/services/llmService.js
++++ b/backend/services/llmService.js
+@@ -10,1 +10,1 @@
+-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
++const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
