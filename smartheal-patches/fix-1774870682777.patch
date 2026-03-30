@@ -1,0 +1,7 @@
+# SmartHeal Auto Fix
+
+--- a/src/smartheal.js
++++ b/src/smartheal.js
+@@ -67,1 +67,1 @@
+-    console.error("Unknow unfined name foundew");
++    console.error("Unknown undefined name found");
