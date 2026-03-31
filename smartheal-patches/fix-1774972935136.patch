@@ -1,0 +1,5 @@
+# SmartHeal Auto Fix
+
+if (typeof name === 'undefined' || name === null) {
+  console.error('Unknown undefined name found');
+}
