@@ -41,7 +41,7 @@ export default function JobsPage() {
 
   // fetch jobs
   useEffect(() => {
-    dispatch(fetchJobss());
+    dispatch(fetchJobs());
   }, [dispatch, page, status, from, to]);
 
   // auto select first job
