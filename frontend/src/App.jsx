@@ -61,7 +61,9 @@ function App() {
         {page === "jobs" && <JobsPage />}
         {page === "projects" && <ProjectsPage />}
         {page === "config" && <ConfigPage />}
-        {page === "docs" && <DocsPage />}
+        {page === "docs" && import DocsPage from './pages/DocsPage';
+
+<DocsPage />}
       </div>
     </div>
   );
